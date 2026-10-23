@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Beggar Free India – Registration</title>
+<style>
+:root{--g:#14532d;--s:#f59e0b;--bg:#f6f7f2;--ink:#1c1c1c;--mut:#5b6359;--line:#d9ddd2}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--g);color:#fff;padding:14px 16px;display:flex;gap:12px;align-items:center}
+header img{height:56px;width:auto;border-radius:6px;background:#fff}
+header h1{font-size:19px;margin:0;line-height:1.2}
+header p{margin:0;font-size:13px;opacity:.85}
+main{max-width:520px;margin:0 auto;padding:16px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs button{flex:1;padding:11px;border:2px solid var(--g);background:#fff;color:var(--g);font-weight:600;border-radius:10px;font-size:15px}
+.tabs button.on{background:var(--g);color:#fff}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+label{display:block;font-weight:600;margin:12px 0 4px;font-size:14px}
+input,select{width:100%;padding:12px;border:1.5px solid #b9c0b2;border-radius:8px;font-size:16px;background:#fff}
+input:focus,select:focus,button:focus-visible{outline:3px solid var(--s);outline-offset:1px}
+.btn{width:100%;margin-top:16px;padding:14px;border:0;border-radius:10px;background:var(--s);color:#1c1c1c;font-weight:700;font-size:17px}
+.btn.alt{background:var(--g);color:#fff}.btn:disabled{opacity:.5}
+.msg{margin-top:12px;font-weight:600}.err{color:#b91c1c}
+.center{text-align:center}#qrbox{display:flex;justify-content:center;margin:12px 0}
+#qrbox img{display:none}
+.res{padding:16px;border-radius:12px;margin-top:12px;font-size:18px;font-weight:700}
+.res small{display:block;font-weight:400;font-size:15px}
+.ok{background:#dcfce7;color:#14532d}.warn{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}
+.stats{display:flex;gap:8px;margin-bottom:10px}.stats div{flex:1;background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.stats b{display:block;font-size:22px}
+.tw{overflow-x:auto;margin-top:10px}table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}th{background:#eef1e8}
+footer{text-align:center;font-size:12px;color:var(--mut);padding:18px}footer a{color:var(--mut)}
+[hidden]{display:none!important}
+</style></head><body>
+<header><img src="logo.png" alt="" onerror="this.style.display='none'">
+<div><h1>Beggar Free India</h1><p>World Record Attempt · 27 Oct 2026 · Kongu Engineering College</p></div></header>
+<main>
+
+<div id="pub">
+ <div class="tabs"><button id="t1" class="on" onclick="show('reg')">Register</button><button id="t2" onclick="show('my')">My QR code</button></div>
+
+ <section id="reg" class="card view">
+  <form id="rf" autocomplete="off">
+   <label for="name">Full name</label><input id="name" name="name" required minlength="2" maxlength="80">
+   <label for="dob">Date of birth</label><input id="dob" name="dob" type="date" required max="2026-12-31">
+   <label for="phone">Mobile number</label><input id="phone" name="phone" required inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" placeholder="10-digit number">
+   <label for="cat">I am a</label><select id="cat" name="cat"><option>Student</option><option>Public</option></select>
+   <label for="org" id="orgl">College name</label><input id="org" name="org" required minlength="2" maxlength="120">
+   <button class="btn" id="rb">Register and get QR code</button>
+   <div id="rmsg" class="msg err" role="alert"></div>
+  </form>
+ </section>
+
+ <section id="my" class="card view" hidden>
+  <form id="mf">
+   <p style="margin:0;color:var(--mut)">Already registered? Enter the same mobile number and date of birth.</p>
+   <label for="mp">Mobile number</label><input id="mp" required inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}">
+   <label for="md">Date of birth</label><input id="md" type="date" required>
+   <button class="btn alt" id="mb">Show my QR code</button>
+   <div id="mmsg" class="msg err" role="alert"></div>
+  </form>
+ </section>
+
+ <section id="qr" class="card view center" hidden>
+  <h2 style="margin:0">You are registered</h2>
+  <p id="qinfo" style="margin:4px 0;color:var(--mut)"></p>
+  <div id="qrbox"></div>
+  <p style="margin:0;font-size:14px">Show this QR code at the entry gate.</p>
+  <button class="btn" onclick="dl()">Download QR code</button>
+  <button class="btn alt" onclick="show('reg')">Done</button>
+ </section>
+</div>
+
+<div id="adm" hidden>
+ <section id="alogin" class="card" hidden>
+  <h2 style="margin:0">Admin login</h2>
+  <form id="af"><label for="ae">Email</label><input id="ae" type="email" required autocomplete="username">
+  <label for="ap">Password</label><input id="ap" type="password" required autocomplete="current-password">
+  <button class="btn alt">Log in</button><div id="amsg" class="msg err"></div></form>
+ </section>
+ <section id="apanel" hidden>
+  <div class="tabs"><button id="a1" class="on" onclick="atab('scan')">Scanner</button><button id="a2" onclick="atab('data')">Data sheet</button><button onclick="logout()">Log out</button></div>
+  <div class="stats"><div><b id="s1">–</b>Registered</div><div><b id="s2">–</b>Checked in</div></div>
+  <div id="scan"><div id="reader" style="width:100%"></div><div id="sres"></div></div>
+  <div id="data" hidden>
+   <input id="q" placeholder="Search name, phone, college or place">
+   <button class="btn alt" onclick="xl()">Download Excel</button>
+   <div id="master" class="card" style="margin-top:12px;border-color:#b91c1c" hidden>
+    <b>Master admin only</b>
+    <button class="btn" style="background:#fef3c7" onclick="doReset('reset_checkins','Clear all check-ins? Registrations stay.')">Clear all check-ins</button>
+    <button class="btn" style="background:#b91c1c;color:#fff" onclick="doReset('reset_all','DELETE ALL registrations?')">Delete ALL registrations</button>
+   </div>
+   <div class="tw"><table><thead><tr><th>Name</th><th>Phone</th><th>DOB</th><th>Type</th><th>College / Place</th><th>Registered</th><th>In</th></tr></thead><tbody id="tb"></tbody></table></div>
+   <p id="cnt" class="msg" style="font-weight:400"></p>
+  </div>
+ </section>
+</div>
+</main>
+<footer>Your details are used only for this event. <a href="#admin">Admin</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* ====== PASTE YOUR SUPABASE DETAILS HERE ====== */
+const SUPABASE_URL = 'https://supabase.com/dashboard/project/mxetdxxiilcqdxgwonzt/settings/api-keys';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14ZXRkeHhpaWxjcWR4Z3dvbnp0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3Njc4OTcsImV4cCI6MjEwODM0Mzg5N30.zOz6rBWSiaoB87qQ5GynJDK-HgiIQQ7ChctrBOUtmXQ';
+/* ============================================== */
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = t => t ? new Date(t).toLocaleString('en-IN',{timeZone:'Asia/Kolkata',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:true}) : '';
+let rows = [], sc = null, busy = false, cur = null;
+
+function show(v){
+  document.querySelectorAll('.view').forEach(e => e.hidden = e.id !== v);
+  $('t1').classList.toggle('on', v === 'reg'); $('t2').classList.toggle('on', v === 'my');
+  $('rmsg').textContent = $('mmsg').textContent = '';
+}
+$('cat').onchange = () => { const s = $('cat').value === 'Student'; $('orgl').textContent = s ? 'College name' : 'Place'; };
+
+function showQR(d){
+  cur = d; show('qr'); $('qinfo').innerHTML = esc(d.name) + ' · ' + esc(d.phone) + '<br>Registered: ' + fmt(d.at);
+  const b = $('qrbox'); b.innerHTML = '';
+  new QRCode(b, {text: d.id, width: 240, height: 240, correctLevel: QRCode.CorrectLevel.M});
+}
+function dl(){
+  const src = $('qrbox').querySelector('canvas'), c = document.createElement('canvas');
+  c.width = 400; c.height = 480; const x = c.getContext('2d');
+  x.fillStyle = '#fff'; x.fillRect(0,0,400,480); x.textAlign = 'center';
+  x.fillStyle = '#14532d'; x.font = 'bold 24px sans-serif'; x.fillText('Beggar Free India', 200, 40);
+  x.font = '14px sans-serif'; x.fillText('World Record Attempt · 27 Oct 2026', 200, 62);
+  x.drawImage(src, 80, 80, 240, 240);
+  x.fillStyle = '#000'; x.font = 'bold 21px sans-serif'; x.fillText(cur.name.slice(0,30), 200, 360);
+  x.font = '17px sans-serif'; x.fillText(cur.phone, 200, 390); x.fillText(cur.org.slice(0,38), 200, 418);
+  x.font = '14px sans-serif'; x.fillStyle = '#555'; x.fillText('Registered: ' + fmt(cur.at), 200, 450);
+  const a = document.createElement('a'); a.download = 'QR-' + cur.phone + '.png'; a.href = c.toDataURL('image/png'); a.click();
+}
+
+$('rf').onsubmit = async e => {
+  e.preventDefault(); const v = Object.fromEntries(new FormData(e.target)); $('rb').disabled = true; $('rmsg').textContent = '';
+  const {data, error} = await sb.rpc('register', {p_name: v.name, p_dob: v.dob, p_phone: v.phone, p_cat: v.cat, p_org: v.org});
+  $('rb').disabled = false;
+  if (error || !data) return $('rmsg').textContent = 'Network problem. Please try again.';
+  if (data.ok) return showQR(data);
+  $('rmsg').textContent = data.error === 'ALREADY' ? 'This number is already registered. Open "My QR code" and use your date of birth.' : 'Please check your details and try again.';
+};
+$('mf').onsubmit = async e => {
+  e.preventDefault(); $('mb').disabled = true;
+  const {data, error} = await sb.rpc('my_qr', {p_phone: $('mp').value, p_dob: $('md').value});
+  $('mb').disabled = false;
+  if (error || !data) return $('mmsg').textContent = 'Network problem. Please try again.';
+  if (data.ok) return showQR(data);
+  $('mmsg').textContent = data.error === 'LOCKED' ? 'Too many wrong attempts. Wait 15 minutes.' : 'No registration found for this number and date of birth.';
+};
+
+/* ---------- Admin ---------- */
+async function route(){
+  const adm = location.hash === '#admin';
+  $('pub').hidden = adm; $('adm').hidden = !adm; if (!adm) return;
+  const {data:{session}} = await sb.auth.getSession();
+  $('alogin').hidden = !!session; $('apanel').hidden = !session;
+  if (session) { atab('scan'); loadAll(); sb.rpc('is_master').then(({data}) => $('master').hidden = !data); }
+}
+window.onhashchange = route; route();
+$('af').onsubmit = async e => {
+  e.preventDefault();
+  const {error} = await sb.auth.signInWithPassword({email: $('ae').value, password: $('ap').value});
+  if (error) return $('amsg').textContent = 'Wrong email or password.';
+  route();
+};
+async function logout(){ await stopScan(); await sb.auth.signOut(); route(); }
+function atab(t){
+  $('scan').hidden = t !== 'scan'; $('data').hidden = t !== 'data';
+  $('a1').classList.toggle('on', t === 'scan'); $('a2').classList.toggle('on', t === 'data');
+  if (t === 'scan') startScan(); else { stopScan(); loadAll(); }
+}
+async function startScan(){
+  if (sc) return; sc = new Html5Qrcode('reader');
+  try { await sc.start({facingMode:'environment'}, {fps:10, qrbox:240}, onScan); }
+  catch(e){ sc = null; $('sres').innerHTML = '<div class="res bad">Camera blocked. Allow camera permission and reload.</div>'; }
+}
+async function stopScan(){ if (sc) { try { await sc.stop(); } catch(e){} sc = null; } }
+async function onScan(t){
+  if (busy) return; busy = true; let r;
+  if (!/^[0-9a-f-]{36}$/i.test(t)) r = {status:'invalid'};
+  else { const {data, error} = await sb.rpc('check_in', {p_id: t}); r = error ? {status:'error'} : data; }
+  const m = {
+    valid: ['ok', '✔ Valid – entry allowed', `${esc(r.name)}<small>${esc(r.phone)} · ${esc(r.category)} · ${esc(r.org)}</small>`],
+    already: ['warn', '⚠ Already checked in', `${esc(r.name)}<small>${esc(r.phone)} · at ${r.at ? new Date(r.at).toLocaleTimeString() : ''}</small>`],
+    invalid: ['bad', '✖ Invalid QR code', ''], error: ['bad', '✖ Error – check internet / login', '']
+  }[r.status] || ['bad', '✖ Error', ''];
+  $('sres').innerHTML = `<div class="res ${m[0]}">${m[1]}<small>${m[2]}</small></div>`;
+  if (navigator.vibrate) navigator.vibrate(r.status === 'valid' ? 80 : [80,60,80]);
+  if (r.status === 'valid') loadAll();
+  setTimeout(() => busy = false, 2500);
+}
+async function loadAll(){
+  let all = [], from = 0;
+  while (true) {
+    const {data, error} = await sb.from('registrations').select('*').order('created_at', {ascending:false}).range(from, from + 999);
+    if (error || !data) break; all = all.concat(data); if (data.length < 1000) break; from += 1000;
+  }
+  rows = all; draw();
+}
+function draw(){
+  const q = $('q').value.toLowerCase(), f = rows.filter(r => !q || (r.name + r.phone + r.org).toLowerCase().includes(q));
+  $('s1').textContent = rows.length; $('s2').textContent = rows.filter(r => r.checked_in).length;
+  $('tb').innerHTML = f.slice(0, 200).map(r => `<tr><td>${esc(r.name)}</td><td>${esc(r.phone)}</td><td>${esc(r.dob)}</td><td>${esc(r.category)}</td><td>${esc(r.org)}</td><td>${fmt(r.created_at)}</td><td>${r.checked_in ? '✔' : ''}</td></tr>`).join('');
+  $('cnt').textContent = `Showing ${Math.min(f.length,200)} of ${f.length}. Excel has all rows.`;
+}
+$('q').oninput = draw;
+async function doReset(fn, q){
+  if (!confirm(q + ' This cannot be undone.')) return;
+  if (prompt('Type RESET to confirm') !== 'RESET') return;
+  const {data, error} = await sb.rpc(fn);
+  alert(!error && data && data.ok ? 'Done.' : 'Not allowed or failed.'); loadAll();
+}
+function xl(){
+  const d = rows.map(r => ({Name:r.name, Phone:r.phone, DOB:r.dob, Type:r.category, 'College / Place':r.org,
+    'Registered at':fmt(r.created_at), 'Checked in':r.checked_in ? 'Yes' : 'No',
+    'Check-in time':r.checked_in_at ? new Date(r.checked_in_at).toLocaleString() : ''}));
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(d), 'Registrations');
+  XLSX.writeFile(wb, 'BeggarFreeIndia_Registrations.xlsx');
+}
+</script></body></html>
